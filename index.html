@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutri A - Beranda</title>
+    <link rel="stylesheet" href="NutriStyle.css">
+</head>
+<body>
+    <nav>
+        <div class="logo-wrapper">
+            <img src="Images/1.png" alt="Logo" class="nav-logo-img">
+            <span class="logo-text">Nutri<span style="color: var(--cream);">A</span></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="index.html" class="active">Beranda</a></li>
+            <li><a href="jurnal.html">Jurnal Makan</a></li>
+            <li><a href="kalkulator.html">Hitung BMR</a></li>
+            <li><a href="scan.html">AI Food Scan</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Halo, Siap Hidup Sehat? 🍎</h1>
+            <p>Nutri A membantu kamu memantau asupan nutrisi harian dengan teknologi AI yang cerdas dan praktis.</p>
+            <div class="hero-btns">
+                <a href="kalkulator.html" class="btn-primary">Mulai Hitung BMR</a>
+                <a href="scan.html" class="btn-secondary">Coba AI Food Scan</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard">
+        <div class="card"><h3>Target</h3><p id="target-kalori">0 kkal</p></div>
+        <div class="card"><h3>Terpakai</h3><p id="kalori-in" style="color: var(--accent-red);">0 kkal</p></div>
+        <div class="card"><h3>Sisa</h3><p id="kalori-left" style="color: #27ae60;">0 kkal</p></div>
+    </section>
+
+    <div class="container-box" style="max-width: 900px;">
+        <h2 style="text-align: center; color: var(--forest-green);">Menu Kantin 🍜</h2>
+        <table>
+            <thead><tr><th>Makanan</th><th>Porsi</th><th>Kalori</th></tr></thead>
+            <tbody>
+                <tr><td>Nasi Putih</td><td>1 Piring</td><td>204 kkal</td></tr>
+                <tr><td>Ayam Goreng</td><td>1 Potong</td><td>260 kkal</td></tr>
+                <tr><td>Telur Dadar</td><td>1 Butir</td><td>93 kkal</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer><p>&copy; 2026 Nutri A - Developed by Kelompok 1 Codecamp</p></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bmr = parseInt(localStorage.getItem('targetKalori')) || 0;
+            const inCal = parseInt(localStorage.getItem('totalTerpakai')) || 0;
+            document.getElementById('target-kalori').innerText = bmr.toLocaleString('id-ID') + " kkal";
+            document.getElementById('kalori-in').innerText = inCal.toLocaleString('id-ID') + " kkal";
+            document.getElementById('kalori-left').innerText = (bmr - inCal).toLocaleString('id-ID') + " kkal";
+        });
+    </script>
+</body>
+</html>

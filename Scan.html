@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutri A - AI Food Scan</title>
+    <link rel="icon" type="image/png" href="Images/1.png">
+    <link rel="stylesheet" href="NutriStyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navigasi (Sesuai Standar Baru Mister Deni) -->
+    <nav>
+        <div class="logo-wrapper">
+            <img src="Images/1.png" alt="Logo NutriA" class="nav-logo-img">
+            <span class="logo-text">Nutri<span style="color: var(--cream);">A</span></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="jurnal.html">Jurnal Makan</a></li>
+            <li><a href="kalkulator.html">Hitung BMR</a></li>
+            <li><a href="scan.html" class="active">AI Food Scan</a></li>
+        </ul>
+    </nav>
+
+    <div class="container-scan reveal active" style="padding-top: 130px; text-align: center;">
+        <h2 style="color: var(--forest-green); margin-bottom: 10px;">AI Food Scan 📸</h2>
+        <p>Arahkan kamera ke makananmu untuk deteksi otomatis.</p>
+
+        <!-- Area Kamera -->
+        <div id="webcam-container" style="margin: 30px auto; width: 300px; height: 300px; border: 5px solid var(--kiwi-green); border-radius: 20px; overflow: hidden; background: #000;"></div>
+        
+        <div id="label-container" style="margin-bottom: 20px; font-weight: 600; font-size: 1.2rem; color: var(--forest-green);">
+            Menunggu Kamera...
+        </div>
+
+        <div class="scan-btns">
+            <button type="button" class="btn-calculate" onclick="init()">Mulai Kamera</button>
+        </div>
+    </div>
+
+    <!-- Script Teachable Machine -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+    <script type="text/javascript">
+        // Link Model Teachable Machine Mister Deni
+        const URL = "https://teachablemachine.withgoogle.com/models/p2_aam1rd/";
+
+        let model, webcam, labelContainer, maxPredictions;
+
+        async function init() {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+
+            document.getElementById('label-container').innerHTML = "Memuat Model AI...";
+
+            // Load model
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+
+            // Setup webcam
+            const flip = true; 
+            webcam = new tmImage.Webcam(300, 300, flip); 
+            await webcam.setup(); 
+            await webcam.play();
+            window.requestAnimationFrame(loop);
+
+            // Append webcam ke UI
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+            labelContainer = document.getElementById("label-container");
+        }
+
+        async function loop() {
+            webcam.update(); 
+            await predict();
+            window.requestAnimationFrame(loop);
+        }
+
+        async function predict() {
+            const prediction = await model.predict(webcam.canvas);
+            
+            // Cari hasil dengan probabilitas tertinggi
+            let highestProb = 0;
+            let bestMatch = "";
+
+            for (let i = 0; i < maxPredictions; i++) {
+                if(prediction[i].probability > highestProb) {
+                    highestProb = prediction[i].probability;
+                    bestMatch = prediction[i].className;
+                }
+            }
+
+            // Tampilkan hasil jika akurasi di atas 80%
+            if (highestProb > 0.8) {
+                labelContainer.innerHTML = `Terdeteksi: ${bestMatch} (${(highestProb * 100).toFixed(0)}%)`;
+            } else {
+                labelContainer.innerHTML = "Mencari Makanan...";
+            }
+        }
+    </script>
+
+    <footer>
+        <p>&copy; 2026 Nutri A - Developed by Kelompok 1 Codecamp</p>
+    </footer>
+</body>
+</html>

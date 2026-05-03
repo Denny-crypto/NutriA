@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutri A - Jurnal Makan</title>
+    <link rel="stylesheet" href="NutriStyle.css">
+</head>
+<body>
+    <nav>
+        <div class="logo-wrapper">
+            <img src="Images/1.png" alt="Logo" class="nav-logo-img">
+            <span class="logo-text">Nutri<span style="color: var(--cream);">A</span></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="jurnal.html" class="active">Jurnal Makan</a></li>
+            <li><a href="kalkulator.html">Hitung BMR</a></li>
+            <li><a href="scan.html">AI Food Scan</a></li>
+        </ul>
+    </nav>
+
+    <div style="padding-top: 150px;">
+        <div class="container-box">
+            <h2 style="margin-bottom: 20px;">Tambah Menu 🍽️</h2>
+            <div class="input-group"><label>Nama Makanan</label><input type="text" id="fn"></div>
+            <div class="input-group"><label>Kalori (kkal)</label><input type="number" id="fc"></div>
+            <button class="btn-primary" style="width: 100%;" onclick="add()">Tambah</button>
+        </div>
+
+        <div class="container-box" style="max-width: 800px;">
+            <h3>Riwayat Hari Ini</h3>
+            <table id="tbl">
+                <thead><tr><th>Makanan</th><th>Kalori</th><th>Hapus</th></tr></thead>
+                <tbody id="list"></tbody>
+            </table>
+            <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <strong>Total: <span id="tot">0</span> kkal</strong>
+                <button onclick="reset()" style="padding: 5px 15px; border-radius: 5px;">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function show() {
+            const f = JSON.parse(localStorage.getItem('foodLogs')) || [];
+            const l = document.getElementById('list');
+            let t = 0; l.innerHTML = '';
+            f.forEach((x, i) => { t += x.c; l.innerHTML += `<tr><td>${x.n}</td><td>${x.c}</td><td><button onclick="del(${i})">❌</button></td></tr>`; });
+            document.getElementById('tot').innerText = t;
+            localStorage.setItem('totalTerpakai', t);
+        }
+        function add() {
+            const n = document.getElementById('fn').value, c = parseInt(document.getElementById('fc').value);
+            if(!n || !c) return;
+            const f = JSON.parse(localStorage.getItem('foodLogs')) || [];
+            f.push({n, c}); localStorage.setItem('foodLogs', JSON.stringify(f));
+            document.getElementById('fn').value = ''; document.getElementById('fc').value = ''; show();
+        }
+        function del(i) {
+            let f = JSON.parse(localStorage.getItem('foodLogs'));
+            f.splice(i, 1); localStorage.setItem('foodLogs', JSON.stringify(f)); show();
+        }
+        function reset() { localStorage.removeItem('foodLogs'); localStorage.setItem('totalTerpakai', 0); show(); }
+        show();
+    </script>
+</body>
+</html>

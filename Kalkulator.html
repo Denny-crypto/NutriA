@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutri A - Hitung BMR</title>
+    <link rel="stylesheet" href="NutriStyle.css">
+</head>
+<body>
+    <nav>
+        <div class="logo-wrapper">
+            <img src="Images/1.png" alt="Logo" class="nav-logo-img">
+            <span class="logo-text">Nutri<span style="color: var(--cream);">A</span></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="jurnal.html">Jurnal Makan</a></li>
+            <li><a href="kalkulator.html" class="active">Hitung BMR</a></li>
+            <li><a href="scan.html">AI Food Scan</a></li>
+        </ul>
+    </nav>
+
+    <div style="padding-top: 150px; padding-bottom: 50px;">
+        <div class="container-box">
+            <h2 style="color: var(--forest-green); margin-bottom: 10px; text-align: center;">Kalkulator BMR 🏃‍♂️</h2>
+            <div class="input-group"><label>Jenis Kelamin</label><select id="gender"><option value="male">Pria</option><option value="female">Wanita</option></select></div>
+            <div class="input-group"><label>Berat Badan (kg)</label><input type="number" id="weight" placeholder="70"></div>
+            <div class="input-group"><label>Tinggi Badan (cm)</label><input type="number" id="height" placeholder="170"></div>
+            <div class="input-group"><label>Usia (tahun)</label><input type="number" id="age" placeholder="20"></div>
+            <button class="btn-primary" style="width: 100%;" onclick="hitung()">Simpan Hasil</button>
+
+            <div id="res-box" class="result-box" style="display: none;">
+                <h4>Target Kalori Kamu:</h4>
+                <p id="res-val">0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function hitung() {
+            const w = parseFloat(document.getElementById('weight').value);
+            const h = parseFloat(document.getElementById('height').value);
+            const a = parseInt(document.getElementById('age').value);
+            const g = document.getElementById('gender').value;
+            if(!w || !h || !a) return alert("Isi data!");
+            let bmr = (10 * w) + (6.25 * h) - (5 * a) + (g === 'male' ? 5 : -161);
+            localStorage.setItem('targetKalori', Math.round(bmr));
+            document.getElementById('res-val').innerText = Math.round(bmr).toLocaleString('id-ID') + " kkal";
+            document.getElementById('res-box').style.display = "block";
+        }
+    </script>
+</body>
+</html>
